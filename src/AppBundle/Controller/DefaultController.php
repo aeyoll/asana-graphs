@@ -5,7 +5,8 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Asana\Client;
 
 class DefaultController extends Controller
 {
@@ -14,44 +15,47 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        \Asana\Client::$DEFAULTS['page_size'] = 100;
+        return $this->render('default/index.html.twig');
+    }
 
+    /**
+     * @Route("/api/projects")
+     */
+    public function projectsAction(Request $request)
+    {
         $client = $this->getClient();
 
         $projects = $client->projects->findAll([
             'workspace' => $this->container->getParameter('asana_workspace_id')
         ]);
 
-        $data = [];
+        return new JsonResponse($projects);
+    }
 
-        foreach ($projects as $project) {
-            $tasks = $client->tasks->findAll([
-                'project' => $project->id,
-            ], [
-                'fields'  => [
-                    'created_at',
-                    'completed',
-                    'completed_at'
-                ]
-            ]);
-
-            $data[] = [
-                'project' => $project,
-                'tasks'   => $tasks
-            ];
-
-            break;
-        }
-
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..'),
-            'projects' => $projects,
-            'data'     => $data,
+    /**
+     * @Route("/api/projects/{project_id}/tasks")
+     */
+    public function tasksAction(Request $request, $project_id)
+    {
+        $client = $this->getClient();
+        $tasks = $client->tasks->findAll([
+            'project' => $project_id,
+        ], [
+            'fields'  => [
+                'created_at',
+                'completed',
+                'completed_at'
+            ]
         ]);
+
+        return new JsonResponse($tasks);
     }
 
     private function getClient()
     {
-        return \Asana\Client::accessToken($this->container->getParameter('asana_client_token'));
+        Client::$DEFAULTS['page_size'] = 100;
+        $token = $this->container->getParameter('asana_client_token');
+
+        return Client::accessToken($token);
     }
 }

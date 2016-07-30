@@ -8,6 +8,12 @@
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+            {% if app.environment == 'dev' %}
+                <script src="http://127.0.0.1:3000/static/bundle.js"></script>
+            {% else %}
+                <script src="{{ asset('dist/bundle.js') }}"></script>
+            {% endif %}
+        {% endblock %}
     </body>
 </html>
