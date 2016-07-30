@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Asana Dashboard{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}
-            {% if app.environment == 'dev' %}
-                <script src="http://127.0.0.1:3000/static/bundle.js"></script>
-            {% else %}
-                <script src="{{ asset('dist/bundle.js') }}"></script>
-            {% endif %}
-        {% endblock %}
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Asana Dashboard{% endblock %}</title>
+    {% block stylesheets %}
+      {% if app.environment == 'dev' %}
+        <link rel="stylesheet" href="http://127.0.0.1:3000/static/bundle.css">
+      {% else %}
+        <link rel="stylesheet" href="{{ asset('dist/bundle.css') }}">
+      {% endif %}
+    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+  </head>
+  <body>
+    {% block body %}{% endblock %}
+    {% block javascripts %}
+      {% if app.environment == 'dev' %}
+        <script src="http://127.0.0.1:3000/static/bundle.js"></script>
+      {% else %}
+        <script src="{{ asset('dist/bundle.js') }}"></script>
+      {% endif %}
+    {% endblock %}
+  </body>
 </html>

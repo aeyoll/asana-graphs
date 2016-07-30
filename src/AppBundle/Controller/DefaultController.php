@@ -67,7 +67,7 @@ class DefaultController extends Controller
         $lastTask  = $tasks[count($tasks) - 1];
 
         $begin = new \DateTime($firstTask->created_at);
-        $end   = new \DateTime($lastTask->created_at);
+        $end   = new \DateTime();
 
         $interval = \DateInterval::createFromDateString('1 day');
         $period = new \DatePeriod($begin, $interval, $end);

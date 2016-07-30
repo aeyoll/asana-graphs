@@ -1,5 +1,5 @@
 import React from 'react';
-import Project from './Project.js';
+import Project from 'Project';
 
 var ProjectList = React.createClass({
   render: function () {
