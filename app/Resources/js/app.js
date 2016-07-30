@@ -1,11 +1,14 @@
 import React from 'react';
+import ProjectList from './components/ProjectList'
 
 var App = React.createClass({
   render: function () {
     return (
-      <h1>
-        Hello world!
-      </h1>
+      <div>
+        <h1>Asana Dashboard</h1>
+
+        <ProjectList></ProjectList>
+      </div>
     );
   }
 });
