@@ -2,21 +2,62 @@ import React from 'react';
 import ReactHighcharts from 'react-highcharts';
 
 var Project = React.createClass({
+  getInitialState: function () {
+    return {
+      tasks: []
+    };
+  },
+
+  componentDidMount: function () {
+    fetch('/api/projects/' + this.props.project.id + '/tasks')
+      .then(response => response.json())
+      .then((json) => {
+        this.setState({
+          tasks: json
+        });
+      });
+  },
+
   render: function () {
+    let count = Object.keys(this.state.tasks).map((value) => {
+      return this.state.tasks[value].count;
+    });
+
+    let completed = Object.keys(this.state.tasks).map((value) => {
+      return this.state.tasks[value].completed;
+    });
+
     let config = {
-      // xAxis: {
-      //   categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-      // },
-      // series: [{
-      //   data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 295.6, 454.4]
-      // }]
+      title: {
+        text: ''
+      },
+      chart: {
+        type: 'area'
+      },
+      xAxis: {
+        categories: Object.keys(this.state.tasks)
+      },
+      series: [{
+        name: 'Total',
+        data: count
+      }, {
+        name: 'Completed',
+        data: completed
+      }]
     };
 
-    // <ReactHighcharts config={config} />
+    let data;
+
+    if (Object.keys(this.state.tasks).length > 0) {
+      data = <ReactHighcharts config={config} />
+    } else {
+      data = 'No tasks'
+    }
 
     return (
       <div>
         <h3>{this.props.project.name} ({this.props.project.id})</h3>
+        {data}
       </div>
     );
   }
