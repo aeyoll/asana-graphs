@@ -1,6 +1,8 @@
 import React from 'react';
 import ProjectList from 'ProjectList';
 
+import styles from './App.css'
+
 var App = React.createClass({
   getInitialState: function () {
     return {
@@ -20,10 +22,14 @@ var App = React.createClass({
 
   render: function () {
     return (
-      <div>
-        <h1>Asana Dashboard</h1>
+      <div className={styles.common}>
+        <h1 className={styles.title}>Asana Dashboard</h1>
+        <div className={styles.container}>
+          <div className={styles.body}>
 
-        <ProjectList projects={this.state.projects} />
+            <ProjectList projects={this.state.projects} />
+          </div>
+        </div>
       </div>
     );
   }

@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactHighcharts from 'react-highcharts';
 
+import styles from 'Project.css'
+
 var Project = React.createClass({
   getInitialState: function () {
     return {
@@ -35,7 +37,20 @@ var Project = React.createClass({
         type: 'area'
       },
       xAxis: {
-        categories: Object.keys(this.state.tasks)
+        title: '',
+        categories: Object.keys(this.state.tasks),
+        labels: {
+          enabled: false
+        }
+      },
+      yAxis: {
+        title: '',
+        labels: {
+          enabled: false
+        }
+      },
+      legend: {
+        enabled: false
       },
       series: [{
         name: 'Total',
@@ -49,14 +64,14 @@ var Project = React.createClass({
     let data;
 
     if (Object.keys(this.state.tasks).length > 0) {
-      data = <ReactHighcharts config={config} />
+      data = <ReactHighcharts className={styles.charts} config={config} />
     } else {
       data = 'No tasks'
     }
 
     return (
-      <div>
-        <h3>{this.props.project.name} ({this.props.project.id})</h3>
+      <div className={styles.common}>
+        <h3 className={styles.title}>{this.props.project.name}</h3>
         {data}
       </div>
     );

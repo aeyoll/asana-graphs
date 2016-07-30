@@ -1,6 +1,8 @@
 import React from 'react';
 import Project from 'Project';
 
+import styles from 'ProjectList.css';
+
 var ProjectList = React.createClass({
   render: function () {
     let rows = [];
@@ -10,8 +12,7 @@ var ProjectList = React.createClass({
     });
 
     return (
-      <div>
-        <h2>Project list</h2>
+      <div className={styles.common}>
         {rows}
       </div>
     );
