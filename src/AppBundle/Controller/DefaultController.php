@@ -25,9 +25,15 @@ class DefaultController extends Controller
     {
         $client = $this->getClient();
 
-        $projects = $client->projects->findAll([
+        $data = $client->projects->findAll([
             'workspace' => $this->container->getParameter('asana_workspace_id')
         ]);
+
+        $projects = [];
+
+        foreach ($data as $project) {
+            $projects[] = $project;
+        }
 
         return new JsonResponse($projects);
     }
@@ -38,7 +44,8 @@ class DefaultController extends Controller
     public function tasksAction(Request $request, $project_id)
     {
         $client = $this->getClient();
-        $tasks = $client->tasks->findAll([
+
+        $data = $client->tasks->findAll([
             'project' => $project_id,
         ], [
             'fields'  => [
@@ -47,6 +54,12 @@ class DefaultController extends Controller
                 'completed_at'
             ]
         ]);
+
+        $tasks = [];
+
+        foreach ($data as $task) {
+            $tasks[] = $task;
+        }
 
         return new JsonResponse($tasks);
     }
