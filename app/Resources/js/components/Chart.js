@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactHighcharts from 'react-highcharts';
 
+import styles from 'Chart.css'
+
 var Chart = React.createClass({
   getInitialState: function () {
     return {
@@ -15,7 +17,13 @@ var Chart = React.createClass({
           text: ''
         },
         chart: {
+          height: 100,
+          marginBottom: 0,
+          spacingBottom: 0,
           type: 'area'
+        },
+        credits: {
+          enabled: false
         },
         xAxis: {
           title: '',

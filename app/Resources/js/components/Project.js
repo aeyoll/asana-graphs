@@ -71,7 +71,7 @@ var Project = React.createClass({
         count={this.state.count}
         completed={this.state.completed} />
     } else {
-      data = 'No tasks'
+      data = <p>No tasks</p>
     }
 
     return (
