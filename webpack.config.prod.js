@@ -1,26 +1,30 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var BundleTracker  = require('webpack-bundle-tracker');
 
 var config = {
   entry: [
-    'webpack-dev-server/client?http://127.0.0.1:3000',
-    'webpack/hot/only-dev-server',
-    './app/Resources/js/index.js',
+    './app/Resources/js/index.js'
   ],
 
   output: {
     path: path.join(__dirname, 'web/dist'),
-    filename: 'bundle.js',
-    publicPath: 'http://127.0.0.1:3000/static/'
+    filename: 'bundle.js'
   },
 
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new ExtractTextPlugin('bundle.css', { allChunks: true }),
-    new BundleTracker({path: __dirname, filename: './webpack-stats.json'})
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false
+      }
+    }),
+    new ExtractTextPlugin('bundle.css', { allChunks: true })
   ],
 
   module: {
