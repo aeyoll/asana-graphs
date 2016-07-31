@@ -7,84 +7,98 @@ var Project = React.createClass({
   getInitialState: function () {
     return {
       tasks: [],
+      count: [],
+      completed: [],
+      remaining: [],
       isFetching: false
     };
   },
 
   componentDidMount: function () {
-    this.setState({
-      isFetching: true
-    });
+    this.dataFetch();
+    this.interval = setInterval(() => this.dataFetch(), 5000);
+  },
 
-    fetch('/api/projects/' + this.props.project.id + '/tasks')
-      .then(response => response.json())
-      .then((json) => {
-        this.setState({
-          isFetching: false,
-          tasks: json
-        });
+  dataFetch: function () {
+    if (this.state.isFetching === false) {
+      this.setState({
+        isFetching: true
       });
+
+      fetch('/api/projects/' + this.props.project.id + '/tasks')
+        .then(response => response.json())
+        .then((json) => {
+          let tasks = json;
+
+          let count = Object.keys(tasks).map((value) => {
+            return tasks[value].count;
+          });
+
+          let completed = Object.keys(tasks).map((value) => {
+            return tasks[value].completed;
+          });
+
+          let remaining = Object.keys(tasks).map((value) => {
+            return tasks[value].remaining;
+          });
+
+          const config = {
+            title: {
+              text: ''
+            },
+            chart: {
+              type: 'area'
+            },
+            xAxis: {
+              title: '',
+              categories: Object.keys(tasks),
+              labels: {
+                enabled: false
+              }
+            },
+            yAxis: {
+              title: '',
+              labels: {
+                enabled: false
+              }
+            },
+            legend: {
+              enabled: false
+            },
+            series: [{
+              name: 'Total',
+              data: count
+            }, {
+              name: 'Completed',
+              data: completed
+            }]
+          };
+
+          this.setState({
+            isFetching: false,
+            tasks: tasks,
+            count: count,
+            completed: completed,
+            remaining: remaining,
+            config: config
+          });
+        });
+      }
   },
 
   render: function () {
     let className;
 
-    let count = Object.keys(this.state.tasks).map((value) => {
-      return this.state.tasks[value].count;
-    });
-
-    let completed = Object.keys(this.state.tasks).map((value) => {
-      return this.state.tasks[value].completed;
-    });
-
-    let remaining = Object.keys(this.state.tasks).map((value) => {
-      return this.state.tasks[value].remaining;
-    });
-
-    if (this.state.isFetching === true) {
-      className = styles.fetching;
-    } else if (this.props.showCompletedProjects === false && remaining[remaining.length - 1] === 0) {
+    if (this.props.showCompletedProjects === false && this.state.remaining[this.state.remaining.length - 1] === 0) {
       className = styles.completed;
     } else {
       className = styles.common;
     }
 
-    let config = {
-      title: {
-        text: ''
-      },
-      chart: {
-        type: 'area'
-      },
-      xAxis: {
-        title: '',
-        categories: Object.keys(this.state.tasks),
-        labels: {
-          enabled: false
-        }
-      },
-      yAxis: {
-        title: '',
-        labels: {
-          enabled: false
-        }
-      },
-      legend: {
-        enabled: false
-      },
-      series: [{
-        name: 'Total',
-        data: count
-      }, {
-        name: 'Completed',
-        data: completed
-      }]
-    };
-
     let data;
 
     if (Object.keys(this.state.tasks).length > 0) {
-      data = <ReactHighcharts className={styles.charts} config={config} />
+      data = <ReactHighcharts className={styles.charts} config={this.state.config} isPureConfig />
     } else {
       data = 'No tasks'
     }
