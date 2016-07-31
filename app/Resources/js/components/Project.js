@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactHighcharts from 'react-highcharts';
+import Chart from 'Chart';
 
 import styles from 'Project.css'
 
@@ -16,7 +16,7 @@ var Project = React.createClass({
 
   componentDidMount: function () {
     this.dataFetch();
-    this.interval = setInterval(() => this.dataFetch(), 5000);
+    this.interval = setInterval(() => this.dataFetch(), 15000);
   },
 
   dataFetch: function () {
@@ -42,45 +42,12 @@ var Project = React.createClass({
             return tasks[value].remaining;
           });
 
-          const config = {
-            title: {
-              text: ''
-            },
-            chart: {
-              type: 'area'
-            },
-            xAxis: {
-              title: '',
-              categories: Object.keys(tasks),
-              labels: {
-                enabled: false
-              }
-            },
-            yAxis: {
-              title: '',
-              labels: {
-                enabled: false
-              }
-            },
-            legend: {
-              enabled: false
-            },
-            series: [{
-              name: 'Total',
-              data: count
-            }, {
-              name: 'Completed',
-              data: completed
-            }]
-          };
-
           this.setState({
             isFetching: false,
             tasks: tasks,
             count: count,
             completed: completed,
-            remaining: remaining,
-            config: config
+            remaining: remaining
           });
         });
       }
@@ -98,7 +65,11 @@ var Project = React.createClass({
     let data;
 
     if (Object.keys(this.state.tasks).length > 0) {
-      data = <ReactHighcharts className={styles.charts} config={this.state.config} isPureConfig />
+      data = <Chart
+        className={styles.charts}
+        tasks={this.state.tasks}
+        count={this.state.count}
+        completed={this.state.completed} />
     } else {
       data = 'No tasks'
     }
