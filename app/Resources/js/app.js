@@ -6,7 +6,8 @@ import styles from './App.css'
 var App = React.createClass({
   getInitialState: function () {
     return {
-      projects: []
+      projects: [],
+      showCompletedProjects: false
     };
   },
 
@@ -27,7 +28,7 @@ var App = React.createClass({
         <div className={styles.container}>
           <div className={styles.body}>
 
-            <ProjectList projects={this.state.projects} />
+            <ProjectList projects={this.state.projects} showCompletedProjects={this.state.showCompletedProjects} />
           </div>
         </div>
       </div>

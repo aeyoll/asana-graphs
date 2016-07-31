@@ -6,21 +6,29 @@ import styles from 'Project.css'
 var Project = React.createClass({
   getInitialState: function () {
     return {
-      tasks: []
+      tasks: [],
+      isFetching: false
     };
   },
 
   componentDidMount: function () {
+    this.setState({
+      isFetching: true
+    });
+
     fetch('/api/projects/' + this.props.project.id + '/tasks')
       .then(response => response.json())
       .then((json) => {
         this.setState({
+          isFetching: false,
           tasks: json
         });
       });
   },
 
   render: function () {
+    let className;
+
     let count = Object.keys(this.state.tasks).map((value) => {
       return this.state.tasks[value].count;
     });
@@ -28,6 +36,18 @@ var Project = React.createClass({
     let completed = Object.keys(this.state.tasks).map((value) => {
       return this.state.tasks[value].completed;
     });
+
+    let remaining = Object.keys(this.state.tasks).map((value) => {
+      return this.state.tasks[value].remaining;
+    });
+
+    if (this.state.isFetching === true) {
+      className = styles.fetching;
+    } else if (this.props.showCompletedProjects === false && remaining[remaining.length - 1] === 0) {
+      className = styles.completed;
+    } else {
+      className = styles.common;
+    }
 
     let config = {
       title: {
@@ -70,7 +90,7 @@ var Project = React.createClass({
     }
 
     return (
-      <div className={styles.common}>
+      <div className={className}>
         <h3 className={styles.title}>{this.props.project.name}</h3>
         {data}
       </div>

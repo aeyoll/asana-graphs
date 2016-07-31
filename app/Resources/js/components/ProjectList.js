@@ -7,8 +7,8 @@ var ProjectList = React.createClass({
   render: function () {
     let rows = [];
 
-    this.props.projects.forEach(function(project) {
-      rows.push(<Project project={project} key={project.id} />);
+    this.props.projects.forEach((project) => {
+      rows.push(<Project project={project} key={project.id} showCompletedProjects={this.props.showCompletedProjects} />);
     });
 
     return (

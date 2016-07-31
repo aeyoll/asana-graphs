@@ -13,3 +13,4 @@
 /web/bundles/
 node_modules
 webpack-stats.json
+web/dist
