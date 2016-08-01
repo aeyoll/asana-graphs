@@ -16,7 +16,7 @@ var Project = React.createClass({
 
   componentDidMount: function () {
     this.dataFetch();
-    this.interval = setInterval(() => this.dataFetch(), 15000);
+    this.interval = setInterval(() => this.dataFetch(), 30000);
   },
 
   dataFetch: function () {
