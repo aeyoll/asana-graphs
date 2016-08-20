@@ -43,7 +43,11 @@ var config = {
   ],
 
   resolve: {
-    modulesDirectories: ['node_modules', 'components']
+    modulesDirectories: ['node_modules', 'components'],
+    alias: {
+      'react': 'react-lite',
+      'react-dom': 'react-lite'
+    }
   },
 };
 
